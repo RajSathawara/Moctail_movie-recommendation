@@ -18,7 +18,7 @@ CORS(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 
-CORS(app, origins=["*"])
+CORS(app, origins=["https://vercel.com/rajsathawaras-projects/moctail-movie-recommendation-s453/H5pNbji6MmtgJsNupi2YZUZng8Bc"])
 
 # Initialize database tables and load ML/Data
 def init_app():
