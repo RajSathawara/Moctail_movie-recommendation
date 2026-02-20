@@ -1,0 +1,162 @@
+Movie Recommendation Software
+
+
+Start App
+   ↓
+Register / Login
+   ↓
+Dashboard
+   ↓
+(Search OR Browse)
+   ↓
+Search Movie
+   ↓
+Open Recommendation Page
+   ↓
+View Similar Movies
+   ↓
+Select Another / Back to Dashboard
+
+
+
+📦 FINAL MODULE LIST (REFINED & CORRECT)
+
+1️⃣   User Authentication Module
+→ Register, login, logout
+
+2️⃣   Movie Browsing Module
+→ Display movies
+→ Popular filter
+→ Recent releases filter
+
+3️⃣   Search Module
+→ Search movies by name
+
+4️⃣   Personalized Recommendation Module (ML) ⭐
+→ “For You” section
+→ Similar movie suggestions
+
+5️⃣   Database Module
+→ User data
+→ Movie data
+→ User interactions
+
+
+🎭 USE CASES (Based on YOUR FINAL DESIGN)
+
+Here’s the complete and correct list:
+
+1️⃣   Register
+2️⃣   Login
+3️⃣   View Dashboard
+4️⃣   Browse Movies
+5️⃣   Filter Movies:
+	Popular
+	Recent
+
+6️⃣   Search Movie
+7️⃣   View Recommendations
+8️⃣   View “For You” Movies
+9️⃣   Logout
+
+
+
+Use Case Diegram: 
+
+ ├── View Dashboard
+ │     ├── Browse Movies
+ │     ├── Filter Movies
+ │     │     ├── Popular
+ │     │     ├── Recently Released
+ │     │     └── For You (Personalized)
+ │     └── Search Movie
+ │           └── View Recommendations
+
+
+
+🔁 DFD Level 0 (Text Representation)
+
+User
+ │
+ │ Register / Login / Search / Filter
+ ▼
+Movie Recommendation System
+ │
+ │ Read / Write
+ ▼
+User Database
+ │
+ │ Fetch movie data
+ ▼
+Movie Dataset
+
+
+Architecture (high level):
+
+React Frontend
+     |
+     |  (API calls)
+     v
+Python Backend (Flask / FastAPI)
+     |
+     |-- MySQL (User data, auth, preferences)
+     |
+     |-- ML Recommendation Engine
+     |
+     |-- Movie Dataset (CSV → DB or memory)
+
+
+
+1️⃣   User Table (Auth data)
+users
+-----
+user_id (PK)
+name
+email
+password_hash
+created_at
+
+2️⃣   User Preferences Table (for “For You”)
+user_preferences
+----------------
+id (PK)
+user_id (FK)
+movie_id
+liked (yes/no)
+
+
+
+👉 Next time you move system, you just run:
+
+pip install -r requirements.txt
+
+
+
+🔹 Phase 1 – Backend Setup (DONE ✅)
+
+   Flask running
+    connected
+   Project structure ready
+
+🔹 Phase 2 – ML Engine Creation (Now Starting 🚀)
+
+This phase is independent from Flask.
+We will:
+
+   Load dataset
+   Clean data
+   Merge movies + credits
+   Create "tags" column
+   Apply TF-IDF
+   Apply Cosine Similarity
+   Create recommend(movie_name) function
+   Only after this works, we connect it to API.
+
+🔹 Phase 3 – API Integration
+
+   Create /recommend route
+   Connect recommendation function
+   Return JSON response
+
+
+

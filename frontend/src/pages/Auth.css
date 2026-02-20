@@ -1,0 +1,192 @@
+/* ─── Auth Page Layout ───────────────────────────────────── */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.auth-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(ellipse 80% 60% at 60% 30%, rgba(139, 92, 246, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 20% 80%, rgba(109, 40, 217, 0.12) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0a12 0%, #0d0d1a 50%, #080810 100%);
+}
+
+/* Add a subtle "film grain" noise texture overlay */
+.auth-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Register variant gets a red/warm tone bg */
+.auth-bg--register {
+    background:
+        radial-gradient(ellipse 60% 50% at 70% 20%, rgba(139, 92, 246, 0.2) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 60% at 10% 90%, rgba(180, 60, 60, 0.12) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0008 0%, #0d0a14 50%, #07060e 100%);
+}
+
+.auth-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+}
+
+/* ─── Auth Card ──────────────────────────────────────────── */
+.auth-card {
+    background: rgba(22, 22, 36, 0.88);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 42px 40px;
+    width: 100%;
+    max-width: 440px;
+    backdrop-filter: blur(24px);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(139, 92, 246, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    animation: fadeUp 0.35s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.auth-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.auth-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forgot-link {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: var(--purple);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.forgot-link:hover {
+    color: #a78bfa;
+    text-decoration: underline;
+}
+
+.auth-submit-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.remember-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.remember-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--purple);
+    cursor: pointer;
+}
+
+.social-row {
+    display: flex;
+    gap: 12px;
+}
+
+.social-logo {
+    font-size: 13px;
+    font-weight: 900;
+    background: white;
+    color: #333;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-footer-text {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.auth-link {
+    color: var(--purple);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.auth-link:hover {
+    color: #a78bfa;
+    text-decoration: underline;
+}
+
+/* ─── Loading Spinner ─────────────────────────────────────── */
+.btn-spinner {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
