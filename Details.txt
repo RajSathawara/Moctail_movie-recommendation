@@ -163,3 +163,5 @@ We will:
 🔹 Frontend → Vercel
 
 Backend  -> https://moctail-movie-recommendation-2.onrender.com
+
+Frontend  -> https://vercel.com/rajsathawaras-projects/moctail-movie-recommendation-s453/H5pNbji6MmtgJsNupi2YZUZng8Bc
