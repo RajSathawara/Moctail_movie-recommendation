@@ -17,3 +17,6 @@ Thumbs.db
 #.pkl files
 backend/similarity.pkl
 backend/movies.pkl
+
+#info files
+Details.txt
