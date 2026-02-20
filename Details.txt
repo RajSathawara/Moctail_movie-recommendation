@@ -159,66 +159,7 @@ We will:
    Return JSON response
 
 
+🔹 Backend → Render
+🔹 Frontend → Vercel
 
-
-
-
-
-there is some more changes i want you to do,
-
-which is you can see when the user search a movie the movie result will show on a poster like where you changed the UI mistake by top to botom but the UI is still porblematic because if the poster is long or maybe because of the title of the mvoie which make the movie poster unmatched to the other posters by left to right , the allignment of the poster by left to right is not aligned , also i want a big change is when the user search something then first there will be a movie poster on the left side of that searched movie and at the rest of that poster image there will be movie discription and nambe highlated and then its other information that looks cool when the user search its recommendable movie , 
-
-and then when he scrolls he find out its recommandation movies and then at the end he also gets the same genre movies but point to be noted that the genere of the movie which is suggested on explore more is not that good or accurate because when i searched "me before you " the movie genere is drama and rommance but the explore more is not showing the same genere movies and also you should show the movie which has all genere same then other genere related , as example : if the user search "me before you" movie than first the system will shows the movies which has genere like drama and rommance both on the genere than after either drama or rommance are there on any movie will shows and if there is no movie with same genere or with on of any genere of that searched movie than it will show somemessage that this genere movie is not available or something,
-this changes must be there with one more thing is there untill a user logout the system, it will not automatically be move to welcome page while clicking on the title of the application intead it will navigate to dashboard page and only if the app is relaunch the user will not automatically logedout 
-
-here if we run the ap.py and npm run dev the user have to login or register everytime because the system is restarting again and again so user have to insert the details but at actually on the browser of the user side it will not logout to the system auto matically from the user side untill he logout from the system
-
-
-
-
-
-
-Advanced Search UI and Logical Improvements Implementation Plan
-Enhance the search experience with a featured movie section, improve the accuracy of genre-based recommendations, and ensure application persistence.
-
-Proposed Changes
-Backend (Flask)
-[MODIFY] 
-app.py
-Metadata Update: Include overview and tagline in 
-metadata_lookup
-.
-New Endpoint: /api/movies/by-genres
-Accepts genres query parameter (comma-separated).
-Returns movies sorted by how many genres they share with the input (highest overlaps first).
-If no matches, returns a refined message.
-Frontend (React)
-[MODIFY] 
-pages/SearchResults.jsx
-Featured Section: Implement a hero-style section for the primary searched movie.
-Layout: Poster (1/3) | Info (2/3).
-Info includes: Title (highlighted), Tagline, Year, Genre Pills, Rating, and Overview (Description).
-Grid Alignment: Ensure .results-grid-5col uses strict alignment to prevent horizontal mismatch.
-Improved "Explore More": Call /api/movies/by-genres using the searched movie's genres.
-[MODIFY] 
-pages/SearchResults.css
-Style the new FeaturedMovie section.
-Fix .results-grid-5col to ensure all children have the same width/height and aligned baselines.
-[MODIFY] 
-pages/Welcome.jsx
-Add user persistence check: Redirect to /dashboard if moctail_user exists in localStorage.
-[MODIFY] 
-services/api.js
-Add getMoviesByGenres method.
-Verification Plan
-Automated Tests
-N/A
-Manual Verification
-Search Experience:
-Search for a movie (e.g., "Inception"). Verify a large featured section appears at the top.
-Check if posters in the grid below are perfectly aligned horizontally.
-Genre Accuracy:
-Search for "Me Before You". Verify "Explore More" shows movies that are BOTH Drama and Romance first.
-Persistence:
-Log in, then manually navigate to the / URL. Verify you are automatically redirected back to /dashboard.
-Refresh the page and verify you remain logged in.
+Backend  -> https://moctail-movie-recommendation-2.onrender.com
