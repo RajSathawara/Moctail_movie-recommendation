@@ -9,12 +9,16 @@ from routes.auth_routes import auth
 from database.db import get_db_connection
 from database.db_utils import add_search_history, get_recent_searches
 import utils.data_manager as dm
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+
+CORS(app, origins=["*"])
 
 # Initialize database tables and load ML/Data
 def init_app():
@@ -265,5 +269,6 @@ def get_random_movies():
 def internal_error(e):
     return error_response("Internal server error", 500)
 
+
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000)
