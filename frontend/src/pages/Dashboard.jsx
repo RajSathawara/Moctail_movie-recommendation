@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import MovieCard from '../components/MovieCard';
 import Footer from '../components/Footer';
-import { getRecommendations } from '../services/api';
+import { getPopularMovies, getRecentMovies, getForYouMovies } from '../services/api';
 import './Dashboard.css';
 
 const SEED_MOVIES = ['inception', 'interstellar', 'the dark knight', 'avengers', 'avatar', 'titanic', 'joker', 'parasite'];
@@ -38,27 +38,30 @@ export default function Dashboard() {
     setMovies([]);
     setPage(1);
 
-    const seeds =
-      activeTab === 0 ? ['inception', 'the dark knight', 'interstellar'] :
-        activeTab === 1 ? ['avatar', 'joker', 'oppenheimer'] :
-          ['parasite', 'spirited away', 'goodfellas'];
+    const storedUser = localStorage.getItem("moctail_user");
+    let userId = null;
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        userId = JSON.parse(storedUser).id;
+      } catch (e) {
+        console.error("User ID parse failed", e);
+      }
+    }
 
     try {
-      const results = await Promise.allSettled(seeds.map((s) => getRecommendations(s)));
-      const all = [];
-      results.forEach((r) => {
-        if (r.status === 'fulfilled') {
-          all.push(...(r.value.data?.data?.recommendations || []));
-        }
-      });
-      // Deduplicate by title
-      const seen = new Set();
-      const unique = all.filter((m) => {
-        if (seen.has(m.title)) return false;
-        seen.add(m.title); return true;
-      });
-      setMovies(unique.sort((a, b) => b.rating - a.rating));
-    } catch {
+      let res;
+      if (activeTab === 0) {
+        res = await getPopularMovies();
+      } else if (activeTab === 1) {
+        res = await getRecentMovies();
+      } else {
+        res = await getForYouMovies(userId);
+      }
+
+      const all = res.data?.data || [];
+      setMovies(all);
+    } catch (error) {
+      console.error("Dashboard fetch error:", error);
       setMovies([]);
     } finally {
       setLoading(false);
@@ -92,7 +95,12 @@ export default function Dashboard() {
             ? Array.from({ length: 12 }).map((_, i) => <SkeletonCard key={i} />)
             : displayed.map((m, i) => (
               <div key={m.title + i} onClick={() => navigate(`/search?q=${encodeURIComponent(m.title)}`)}>
-                <MovieCard title={m.title} rating={m.rating} votes={m.votes} />
+                <MovieCard
+                  title={m.title}
+                  rating={m.rating}
+                  votes={m.votes}
+                  releaseYear={m.release_year}
+                />
               </div>
             ))
           }

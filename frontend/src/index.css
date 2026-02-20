@@ -315,6 +315,9 @@ img {
   transition: var(--transition);
   border: 1px solid var(--border);
   position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .movie-card:hover {
@@ -324,16 +327,23 @@ img {
 }
 
 .movie-card--compact .movie-card-poster {
-  aspect-ratio: 2/3;
+  height: 200px;
 }
 
 /* Poster area */
 .movie-card-poster {
   width: 100%;
+  max-width: 200px;
+  /* Strict width control */
+  height: 270px;
+  /* Fixed height for stability */
   aspect-ratio: 2/3;
   background: var(--surface-2);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
+  margin: 0 auto;
+  /* Center if card is wider */
 }
 
 .movie-card-poster-img {

@@ -31,7 +31,7 @@ function getGradient(title = '') {
 }
 
 // ── Match badge color by rank ────────────────────────────────────
-export function matchBadgeStyle(rank) {
+function matchBadgeStyle(rank) {
     if (rank <= 3) return { background: 'rgba(34,197,94,0.18)', color: '#4ade80', border: '1px solid rgba(34,197,94,0.35)' };
     if (rank <= 6) return { background: 'rgba(234,179,8,0.18)', color: '#facc15', border: '1px solid rgba(234,179,8,0.35)' };
     return { background: 'rgba(249,115,22,0.18)', color: '#fb923c', border: '1px solid rgba(249,115,22,0.35)' };
@@ -45,6 +45,7 @@ export default function MovieCard({
     genres = [],
     matchPercent,
     matchRank,       // 1-based rank for badge colour
+    releaseYear,
     showGenres = false,
     compact = false,
 }) {
@@ -116,6 +117,7 @@ export default function MovieCard({
                     </div>
                 ) : (
                     <div className="movie-card-meta">
+                        {releaseYear ? `${releaseYear} • ` : ''}
                         {votes ? `${votes.toLocaleString()} votes` : primaryGenre || ''}
                     </div>
                 )}

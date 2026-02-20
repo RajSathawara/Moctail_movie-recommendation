@@ -3,6 +3,7 @@ import numpy as np
 import ast
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from utils.jwt_handler import token_required
 
 # ==============================
 # 1️⃣ Load Datasets
@@ -119,6 +120,7 @@ similarity = cosine_similarity(vectors)
 
 import difflib
 
+@token_required
 def recommend(movie_name, min_rating=0, min_votes=0):
 
     movie_name = movie_name.lower()

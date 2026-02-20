@@ -64,10 +64,35 @@
 }
 
 .welcome-headline-accent {
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #a78bfa;
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+    display: inline-block;
+    min-height: 1.2em;
+    vertical-align: bottom;
+}
+
+.typing-cursor {
+    display: inline-block;
+    width: 2px;
+    background-color: #a78bfa;
+    margin-left: 4px;
+    animation: blink 0.8s infinite;
+    font-weight: 200;
+    line-height: 1;
+    height: 0.8em;
+    vertical-align: middle;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
 }
 
 .welcome-subtext {
@@ -75,6 +100,62 @@
     color: var(--muted);
     line-height: 1.7;
     max-width: 500px;
+    margin-bottom: 30px;
+}
+
+/* Hero Search Bar */
+.hero-search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 99px;
+    padding: 6px 6px 6px 24px;
+    max-width: 540px;
+    width: 100%;
+    margin-bottom: 40px;
+    transition: var(--transition);
+    backdrop-filter: blur(8px);
+}
+
+.hero-search-container:focus-within {
+    border-color: rgba(139, 92, 246, 0.6);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+.hero-search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    padding: 10px 0;
+}
+
+.hero-search-input::placeholder {
+    color: var(--muted-2);
+}
+
+.hero-search-btn {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.hero-search-btn:hover {
+    background: #7c3aed;
+    transform: translateX(2px);
 }
 
 .welcome-cta {
@@ -140,10 +221,9 @@
 }
 
 .text-purple {
-    background: linear-gradient(135deg, #a78bfa, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #a78bfa;
+    text-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+    font-weight: 700;
 }
 
 .features-grid {

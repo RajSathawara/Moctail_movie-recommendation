@@ -2,6 +2,9 @@ from flask import Blueprint, request, jsonify
 from database.db import get_db_connection
 from utils.security import hash_password
 from utils.security import hash_password, check_password
+import jwt
+import datetime
+import os
 
 auth = Blueprint("auth", __name__)
 
@@ -72,12 +75,21 @@ def login():
         if not check_password(password, stored_password):
             return jsonify({"error": "Invalid password"}), 401
 
+        token = jwt.encode(
+            {
+                "user_id": user["id"],
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)
+            },
+            os.getenv("SECRET_KEY"),
+            algorithm="HS256"
+        )
         return jsonify({
             "message": "Login successful",
+            "token": token,
             "user": {
-                "id": user[0],
-                "name": user[1],
-                "email": user[2]
+                "id": user["id"],
+                "name": user["name"],
+                "email": user["email"]
             }
         }), 200
 

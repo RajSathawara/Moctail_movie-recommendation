@@ -1,15 +1,10 @@
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import MovieCard from '../components/MovieCard';
 import Footer from '../components/Footer';
+import { getRandomMovies } from '../services/api';
 import './Welcome.css';
-
-const TRENDING = [
-  { title: 'Nebula Dreams', genre: 'SCI-FI', year: '2024', rating: 8.0 },
-  { title: 'Silent Streets', genre: 'DRAMA', year: '2023', rating: 7.5 },
-  { title: 'The Last Horizon', genre: 'ACTION', year: '2024', rating: 8.2 },
-  { title: 'Shadow Point', genre: 'THRILLER', year: '2024', rating: 7.8 },
-];
 
 const FEATURES = [
   {
@@ -29,8 +24,79 @@ const FEATURES = [
   },
 ];
 
+const DYNAMIC_GENRES = ['Action', 'Sci-Fi', 'Romance', 'Comedy', 'Thriller', 'Drama'];
+
 export default function Welcome() {
   const navigate = useNavigate();
+  const [trending, setTrending] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // ── Typing Animation Logic ──
+  const [genreIndex, setGenreIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState(DYNAMIC_GENRES[0]); // Start with first genre
+  const [isDeleting, setIsDeleting] = useState(false);
+  const typingSpeed = isDeleting ? 70 : 120;
+
+  useEffect(() => {
+    let timeout;
+    const currentGenre = DYNAMIC_GENRES[genreIndex % DYNAMIC_GENRES.length];
+
+    if (isDeleting) {
+      if (displayedText.length > 0) {
+        timeout = setTimeout(() => {
+          setDisplayedText(displayedText.slice(0, -1));
+        }, typingSpeed);
+      } else {
+        setIsDeleting(false);
+        setGenreIndex((prev) => prev + 1);
+      }
+    } else {
+      if (displayedText.length < currentGenre.length) {
+        timeout = setTimeout(() => {
+          setDisplayedText(currentGenre.slice(0, displayedText.length + 1));
+        }, typingSpeed);
+      } else {
+        timeout = setTimeout(() => {
+          setIsDeleting(true);
+        }, 2000);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isDeleting, genreIndex]);
+
+  // ── Persistence Check ──
+  useEffect(() => {
+    const user = localStorage.getItem('moctail_user');
+    if (user && user !== 'undefined') {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
+  // ── Fetch Random Movies ──
+  useEffect(() => {
+    const fetchRandom = async () => {
+      try {
+        const res = await getRandomMovies();
+        setTrending(res.data?.data || []);
+      } catch (err) {
+        console.error("Failed to fetch trending movies", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRandom();
+  }, []);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/register?search=${encodeURIComponent(searchQuery)}`);
+    } else {
+      navigate('/register');
+    }
+  };
 
   return (
     <div className="welcome">
@@ -42,14 +108,29 @@ export default function Welcome() {
         <div className="welcome-hero-content">
           <div className="welcome-pill">🎬 Powered with AI</div>
           <h1 className="welcome-headline">
-            Find Your Next<br />
-            <span className="welcome-headline-accent">Favorite Movie</span>
+            Find Your Next <br />
+            <span className="welcome-headline-accent">
+              {displayedText || "Favorite"}<span className="typing-cursor">|</span> Movie
+            </span>
           </h1>
           <p className="welcome-subtext">
             Personalized recommendations powered by cutting-edge AI.
-            Discover hidden gems and blockbuster hits tailored specifically
-            to your unique cinematic taste.
+            Discover hidden gems tailored specifically to your unique cinematic taste.
           </p>
+
+          <form className="hero-search-container" onSubmit={handleSearch}>
+            <input
+              type="text"
+              className="hero-search-input"
+              placeholder="What are you in the mood for?"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="submit" className="hero-search-btn">
+              <span>🔍</span> Search
+            </button>
+          </form>
+
           <div className="welcome-cta">
             <button className="btn btn-primary welcome-btn-primary" onClick={() => navigate('/register')}>
               <span>🚀</span> Start Your Journey
@@ -92,9 +173,22 @@ export default function Welcome() {
             </button>
           </div>
           <div className="trending-grid">
-            {TRENDING.map((m) => (
-              <MovieCard key={m.title} {...m} />
-            ))}
+            {loading ? (
+              <div className="loading-placeholder">Picking some fresh titles...</div>
+            ) : (
+              trending.map((m) => (
+                <div key={m.movie_id} onClick={() => navigate('/register')}>
+                  <MovieCard
+                    title={m.title}
+                    rating={m.rating}
+                    votes={m.votes}
+                    genres={m.genres}
+                    releaseYear={m.release_year}
+                    compact
+                  />
+                </div>
+              ))
+            )}
           </div>
         </div>
       </section>

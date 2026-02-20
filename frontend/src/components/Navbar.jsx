@@ -5,7 +5,13 @@ import './Navbar.css';
 export default function Navbar({ showSearch = false }) {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
-    const user = JSON.parse(localStorage.getItem('moctail_user') || 'null');
+    const storedUser = localStorage.getItem("moctail_user");
+    let user = null;
+    try {
+        user = storedUser && storedUser !== "undefined" ? JSON.parse(storedUser) : null;
+    } catch (e) {
+        console.error("Failed to parse stored user", e);
+    }
 
     const handleLogout = () => {
         localStorage.removeItem('moctail_user');
