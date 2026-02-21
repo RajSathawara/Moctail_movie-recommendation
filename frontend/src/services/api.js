@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: "https://moctail-movie-recommendation-2.onrender.com/api",
+    baseURL: "https://moctail-movie-recommendation-3.onrender.com",
     headers: { 'Content-Type': 'application/json' },
 });
 
