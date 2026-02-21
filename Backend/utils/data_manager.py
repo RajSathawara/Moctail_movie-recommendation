@@ -2,11 +2,30 @@ import pandas as pd
 import pickle
 import ast
 import os
+import requests
 
 # Centralized data storage
 movies = None
 similarity = None
 metadata_lookup = None
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BACKEND_DIR = os.path.join(BASE_DIR, "..")
+
+# 🔹 Google Drive Direct Download Links
+MOVIES_URL = "https://drive.google.com/uc?export=download&id=1mr-XpKUeurYpVS1PWLOsIFLdyNztJw3h"
+SIMILARITY_URL = "https://drive.google.com/uc?export=download&id=1QV1n7j9MDnZBBdim28mxVBij5doG-nko"
+
+def download_file(url, path):
+    if not os.path.exists(path):
+        print(f"Downloading {os.path.basename(path)} from cloud...")
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(path, "wb") as f:
+                f.write(response.content)
+            print(f"{os.path.basename(path)} downloaded successfully.")
+        else:
+            raise Exception(f"Failed to download file from {url}")
 
 def load_all_data():
     """Load ML models and metadata lookup precisely once."""
@@ -16,50 +35,29 @@ def load_all_data():
         return
         
     try:
+        # Construct absolute paths inside backend folder
+        movies_path = os.path.join(BACKEND_DIR, "movies.pkl")
+        similarity_path = os.path.join(BACKEND_DIR, "similarity.pkl")
+        
+        print(f"DEBUG: Backend directory: {BACKEND_DIR}")
+        
+        # 🔥 Download from cloud if not exists
+        download_file(MOVIES_URL, movies_path)
+        download_file(SIMILARITY_URL, similarity_path)
+
         # Load ML Files
-        movies = pickle.load(open("movies.pkl", "rb"))
-        similarity = pickle.load(open("similarity.pkl", "rb"))
+        movies = pickle.load(open(movies_path, "rb"))
+        similarity = pickle.load(open(similarity_path, "rb"))
         movies["title"] = movies["title"].str.lower()
         
         # Build Metadata Lookup
         metadata_lookup = _build_metadata_lookup()
         
-        print("SUCCESS: Data and ML models loaded.")
-    except Exception as e:
-        print(f"CRITICAL ERROR: Failed to load data: {e}")
+        print("✅ SUCCESS: Data and ML models loaded.")
 
-def _build_metadata_lookup():
-    """Read id, genres, release_date, overview, and tagline from CSV."""
-    try:
-        df = pd.read_csv(
-            "dataset/tmdb_5000_movies.csv",
-            usecols=["id", "genres", "release_date", "overview", "tagline"]
-        )
-        lookup = {}
-        for _, row in df.iterrows():
-            try:
-                genre_names = [g["name"] for g in ast.literal_eval(row["genres"])]
-                release_year = 0
-                if not pd.isna(row["release_date"]):
-                    try:
-                        release_year = int(str(row["release_date"]).split("-")[0])
-                    except: pass
-                
-                lookup[int(row["id"])] = {
-                    "genres": genre_names,
-                    "release_year": release_year,
-                    "overview": str(row["overview"]) if not pd.isna(row["overview"]) else "",
-                    "tagline": str(row["tagline"]) if not pd.isna(row["tagline"]) else ""
-                }
-            except Exception:
-                lookup[int(row["id"])] = {"genres": [], "release_year": 0, "overview": "", "tagline": ""}
-        return lookup
     except Exception as e:
-        print("WARNING: Could not load metadata lookup:", e)
-        return {}
-
-def get_movie_metadata(movie_id):
-    """Safe helper to get metadata for a movie ID."""
-    if metadata_lookup is None:
-        return {"genres": [], "release_year": 0, "overview": "", "tagline": ""}
-    return metadata_lookup.get(int(movie_id), {"genres": [], "release_year": 0, "overview": "", "tagline": ""})
+        print(f"❌ CRITICAL ERROR: Failed to load data: {e}")
+        import traceback
+        traceback.print_exc()
+        movies = None
+        similarity = None

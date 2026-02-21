@@ -14,11 +14,10 @@ from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+# Enable CORS for all routes, allowing the production frontend and local development
+CORS(app, resources={r"/api/*": {"origins": ["https://moctail-movie-recommendation-s453.vercel.app", "http://localhost:5173", "http://localhost:5174"]}})
+
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-
-
-CORS(app, origins=["https://vercel.com/rajsathawaras-projects/moctail-movie-recommendation-s453/H5pNbji6MmtgJsNupi2YZUZng8Bc"])
 
 # Initialize database tables and load ML/Data
 def init_app():
