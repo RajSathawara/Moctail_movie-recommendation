@@ -23,20 +23,25 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 def init_app():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('''
+    
+    is_postgres = bool(os.getenv("DATABASE_URL"))
+    pk_type = "SERIAL PRIMARY KEY" if is_postgres else "INTEGER PRIMARY KEY AUTOINCREMENT"
+    timestamp_type = "TIMESTAMP" if is_postgres else "DATETIME"
+    
+    cursor.execute(f'''
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {pk_type},
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL
         )
     ''')
-    cursor.execute('''
+    cursor.execute(f'''
         CREATE TABLE IF NOT EXISTS search_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id {pk_type},
             user_id INTEGER NOT NULL,
             movie_title TEXT NOT NULL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            timestamp {timestamp_type} DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
     ''')

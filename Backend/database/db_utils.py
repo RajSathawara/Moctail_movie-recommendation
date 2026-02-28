@@ -5,10 +5,10 @@ def add_search_history(user_id, movie_title):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO search_history (user_id, movie_title) VALUES (?, ?)",
-            (user_id, movie_title)
-        )
+        query = "INSERT INTO search_history (user_id, movie_title) VALUES (?, ?)"
+        import os
+        if os.getenv("DATABASE_URL"): query = query.replace("?", "%s")
+        cursor.execute(query, (user_id, movie_title))
         conn.commit()
         cursor.close()
         conn.close()
@@ -22,10 +22,10 @@ def get_recent_searches(user_id, limit=3):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(
-            "SELECT movie_title FROM search_history WHERE user_id = ? ORDER BY timestamp DESC LIMIT ?",
-            (user_id, limit)
-        )
+        query = "SELECT movie_title FROM search_history WHERE user_id = ? ORDER BY timestamp DESC LIMIT ?"
+        import os
+        if os.getenv("DATABASE_URL"): query = query.replace("?", "%s")
+        cursor.execute(query, (user_id, limit))
         results = [row["movie_title"] for row in cursor.fetchall()]
         cursor.close()
         conn.close()

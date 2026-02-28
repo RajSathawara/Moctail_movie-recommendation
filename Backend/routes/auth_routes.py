@@ -31,6 +31,7 @@ def register():
         cursor = conn.cursor()
 
         query = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
+        if os.getenv("DATABASE_URL"): query = query.replace("?", "%s")
         cursor.execute(query, (name, email, hashed_password))
 
         conn.commit()
@@ -59,6 +60,7 @@ def login():
         cursor = conn.cursor()
 
         query = "SELECT id, name, email, password FROM users WHERE email = ?"
+        if os.getenv("DATABASE_URL"): query = query.replace("?", "%s")
         cursor.execute(query, (email,))
         user = cursor.fetchone()
 
