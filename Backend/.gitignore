@@ -1,0 +1,8 @@
+__pycache__/
+venv/
+.env
+movies.pkl
+similarity.pkl
+moctail.db
+*.pyc
+.DS_Store

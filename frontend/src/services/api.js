@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
 const api = axios.create({
-    baseURL: "https://moctail-movie-recommendation-3.onrender.com",
+    baseURL: baseURL,
     headers: { 'Content-Type': 'application/json' },
 });
 

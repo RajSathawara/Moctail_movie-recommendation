@@ -18,14 +18,10 @@ SIMILARITY_URL = "https://drive.google.com/uc?export=download&id=1QV1n7j9MDnZBBd
 
 def download_file(url, path):
     if not os.path.exists(path):
-        print(f"Downloading {os.path.basename(path)} from cloud...")
-        response = requests.get(url)
-        if response.status_code == 200:
-            with open(path, "wb") as f:
-                f.write(response.content)
-            print(f"{os.path.basename(path)} downloaded successfully.")
-        else:
-            raise Exception(f"Failed to download file from {url}")
+        import gdown
+        print(f"Downloading {os.path.basename(path)} from cloud using gdown...")
+        gdown.download(url, path, quiet=False)
+        print(f"{os.path.basename(path)} downloaded successfully.")
 
 def load_all_data():
     """Load ML models and metadata lookup precisely once."""
@@ -61,3 +57,40 @@ def load_all_data():
         traceback.print_exc()
         movies = None
         similarity = None
+
+def _build_metadata_lookup():
+    path = os.path.join(BACKEND_DIR, "dataset", "tmdb_5000_movies.csv")
+    if not os.path.exists(path):
+        print(f"WARNING: Metadata CSV not found at {path}")
+        return {}
+    
+    df = pd.read_csv(path)
+    lookup = {}
+    for _, row in df.iterrows():
+        try:
+            genres_list = ast.literal_eval(str(row.get('genres', '[]')))
+            genres = [g['name'] for g in genres_list] if isinstance(genres_list, list) else []
+        except:
+            genres = []
+            
+        release_date = str(row.get('release_date', ''))
+        release_year = release_date.split('-')[0] if release_date and release_date != 'nan' else ""
+        
+        lookup[int(row['id'])] = {
+            "genres": genres,
+            "release_year": release_year,
+            "overview": str(row.get('overview', '')) if str(row.get('overview', '')) != 'nan' else "",
+            "tagline": str(row.get('tagline', '')) if str(row.get('tagline', '')) != 'nan' else ""
+        }
+    return lookup
+
+def get_movie_metadata(mid):
+    global metadata_lookup
+    if metadata_lookup and mid in metadata_lookup:
+        return metadata_lookup[mid]
+    return {
+        "genres": [],
+        "release_year": "",
+        "overview": "",
+        "tagline": ""
+    }
