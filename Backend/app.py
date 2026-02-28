@@ -15,7 +15,7 @@ load_dotenv()
 
 app = Flask(__name__)
 # Enable CORS for all routes, allowing the production frontend and local development
-CORS(app, resources={r"/api/*": {"origins": ["https://moctail-movie-recommendation-s453.vercel.app", "http://localhost:5173", "http://localhost:5174"]}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
